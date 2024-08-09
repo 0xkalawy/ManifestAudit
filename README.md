@@ -20,11 +20,6 @@
    cd ManifestAudit
    ```
 
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
 ## Usage
 
 Run the tool using Python:
