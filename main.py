@@ -30,10 +30,11 @@ def get_activities(root:ET.Element,android_namespace:str):
         name = activity.get(f"{{{android_namespace}}}name")
         print_colored(name,ENDC)
         exported = activity.get(f"{{{android_namespace}}}exported")
-        if exported == 'true':
+        if exported == 'true' or activity.findall(".//intent-filter"):
             exported_activities.append(name)
+
     print("")
-    print_colored("Activity with exported flag",RED)
+    print_colored("Exported Activities",RED)
     for activity in exported_activities:
         print_colored(activity,ENDC)
     
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', help='Output file (Only text file is supported)')
     parser.add_argument('--activities', action='store_true', help='Print only activities')
     parser.add_argument('--get-namespace', action='store_true', help='Print only namespace')
-    # parser.add_argument('--namespace', action='store_true', help='provide the namespace of the file (if not set the tool will determine it by itself)')
+    parser.add_argument('--namespace', help='provide the namespace of the file (if not set the tool will determine it by itself)')
     parser.add_argument('--custom-permissions', action='store_true', help='provide only the permissions defined by the developer')
     parser.add_argument('--uses-permissions', action='store_true', help='provide needed permission for the application to run')
     parser.add_argument('--dump', action='store_true', help='dump the whole file and extract all possible data')
