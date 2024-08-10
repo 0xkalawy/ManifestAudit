@@ -19,10 +19,12 @@
    git clone https://github.com/MohamedWagdy7/ManifestAudit.git
    cd ManifestAudit
    ```
-   ### For linux
-    ```bash
+
+### For linux
+
+  ```bash
     sudo mv ManifestAudit /usr/bin
-    ```
+  ```
 
 ## Usage
 
@@ -58,6 +60,7 @@ python main.py -f path/to/AndroidManifest.xml [options]
   ```
 
 - **Dump All Data**:
+
   ```bash
   python main.py -f path/to/AndroidManifest.xml --dump
   ```
