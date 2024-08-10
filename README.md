@@ -22,9 +22,9 @@
 
 ### For linux
 
-  ```bash
-    sudo mv ManifestAudit /usr/bin
-  ```
+```bash
+ sudo mv ManifestAudit /usr/bin
+```
 
 ## Usage
 
