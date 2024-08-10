@@ -28,22 +28,25 @@ def get_activities(root:ET.Element,android_namespace:str):
     print_colored("All activities:",BLUE)
     for activity in root.findall(".//activity"):
         name = activity.get(f"{{{android_namespace}}}name")
+        print("\t",end="")
         print_colored(name,ENDC)
         exported = activity.get(f"{{{android_namespace}}}exported")
         if exported == 'true' or activity.findall(".//intent-filter"):
             exported_activities.append(name)
 
     print("")
-    print_colored("Exported Activities",RED)
+    print_colored("\tExported Activities",RED)
     for activity in exported_activities:
+        print("\t\t",end="")
         print_colored(activity,ENDC)
     
         
 # print custom permissions 
-def get_custom_permissions(root):
+def get_custom_permissions(root:ET.Element):
     print_colored("Custom Permissions:",BLUE)
     for permission in root.findall(".//permission"):
         name = permission.get(f"{{{android_namespace}}}name")
+        print("\t",end="")
         print_colored(name,ENDC)
        
 # print uses permission
@@ -52,17 +55,30 @@ def get_uses_permissions(root:ET.Element):
     print_colored("Uses Permissions:",BLUE)
     
     for permission in permissions:
+        print("\t",end="")
         print(permission.get(f"{{{android_namespace}}}name"))
     
+def get_intents(root: ET.Element,android_namespace):
+    print_colored("Intents:", BLUE)
+    for intent_filter in root.findall(".//intent-filter"):
+        for action, category in zip(intent_filter.findall(".//action"), intent_filter.findall(".//category")):
+            print_colored("\tAction:",YELLOW)
+            print(f"\t\t{action.get(f'{{{android_namespace}}}name')}")
+            print_colored("\tCategory:",YELLOW)
+            print(f"\t\t{category.get(f'{{{android_namespace}}}name')}")
+        print("\t"+("="*40))
+
+        
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
     parser.add_argument('-f', '--file', required=True, help='Path to the AndroidManifest.xml file')
-    parser.add_argument('-o', '--output', help='Output file (Only text file is supported)')
+    # parser.add_argument('-o', '--output', help='Output file (Only text file is supported)')
     parser.add_argument('--activities', action='store_true', help='Print only activities')
     parser.add_argument('--get-namespace', action='store_true', help='Print only namespace')
     parser.add_argument('--namespace', help='provide the namespace of the file (if not set the tool will determine it by itself)')
     parser.add_argument('--custom-permissions', action='store_true', help='provide only the permissions defined by the developer')
     parser.add_argument('--uses-permissions', action='store_true', help='provide needed permission for the application to run')
+    parser.add_argument('--intents', action='store_true', help='provide intents')
     parser.add_argument('--dump', action='store_true', help='dump the whole file and extract all possible data')
     args = parser.parse_args()
     
@@ -78,7 +94,8 @@ if __name__ == "__main__":
         get_custom_permissions(root)
         print()
         get_uses_permissions(root)
-        
+        print()
+        get_intents(root,android_namespace)
 
     elif args.get_namespace:
         exit()        
@@ -86,10 +103,11 @@ if __name__ == "__main__":
     elif args.activities:
         get_activities(root,android_namespace)
         
-        
     elif args.custom_permissions:
         get_custom_permissions(root)
         
     elif args.uses_permissions:
         get_uses_permissions(root)
-        
+    
+    elif args.intents:
+        get_intents(root,android_namespace)
