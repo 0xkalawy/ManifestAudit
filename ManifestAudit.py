@@ -16,7 +16,7 @@ UNDERLINE = '\033[4m'
 # print colored text
 def print_colored(text, color):
     print(f"{color}{text}",end="")
-    print(f"{ENDC}")
+    print(f"{ENDC}",end="")
 
 # get the AndroidManifest nemspace specified in the root element
 def get_namespace(file):
@@ -28,6 +28,7 @@ def get_namespace(file):
 def get_activities(root:ET.Element,android_namespace:str):
     exported_activities = []
     print_colored("All activities:",BLUE)
+    print()
     for activity in root.findall(".//activity"):
         name = activity.get(f"{{{android_namespace}}}name")
         print("\t",end="")
@@ -36,8 +37,9 @@ def get_activities(root:ET.Element,android_namespace:str):
         if exported == 'true' or activity.findall(".//intent-filter"):
             exported_activities.append(name)
 
-    print("")
-    print_colored("\tExported Activities",RED)
+    print("\n")
+    print_colored("\tExported Activities:",RED)
+    print()
     for activity in exported_activities:
         print("\t\t",end="")
         print_colored(activity,ENDC)
@@ -46,6 +48,7 @@ def get_activities(root:ET.Element,android_namespace:str):
 # print custom permissions 
 def get_custom_permissions(root:ET.Element):
     print_colored("Custom Permissions:",BLUE)
+    print()
     for permission in root.findall(".//permission"):
         name = permission.get(f"{{{android_namespace}}}name")
         print("\t",end="")
@@ -55,28 +58,31 @@ def get_custom_permissions(root:ET.Element):
 def get_uses_permissions(root:ET.Element):
     permissions = root.findall(".//uses-permission")
     print_colored("Uses Permissions:",BLUE)
-    
+    print()
     for permission in permissions:
         print("\t",end="")
         print(permission.get(f"{{{android_namespace}}}name"))
     
 def get_intents(root: ET.Element,android_namespace):
     print_colored("Intents:", BLUE)
+    print()
     for intent_filter in root.findall(".//intent-filter"):
-        for action, category in zip(intent_filter.findall(".//action"), intent_filter.findall(".//category")):
-            print_colored("\tAction:",YELLOW)
-            print(f"\t\t{action.get(f'{{{android_namespace}}}name')}")
-            print_colored("\tCategory:",YELLOW)
-            print(f"\t\t{category.get(f'{{{android_namespace}}}name')}")
+        for i in intent_filter.findall(".//*"):
+            print_colored("\t"+i.tag+":",YELLOW)
+            print(f"\t\t{i.get(f'{{{android_namespace}}}name')}")
         print("\t"+("="*40))
 def get_receivers(root:ET.Element,android_namespace):
     print_colored("Receiver:",BLUE)
+    print()
     for receiver in root.findall(".//receiver"):
         name = receiver.get(f"{{{android_namespace}}}name")
-        receiver.findall(".//intent-filter")
         print("\t",end="")
         print_colored(name,ENDC)
-        
+        for i in receiver.findall(".//intent-filter"):
+            print()
+            for j in i.findall(".//*"):
+                print_colored("\t\t"+j.tag+": ",RED)
+                print(j.get(f"{{{android_namespace}}}name"))
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
     parser.add_argument('-f', '--file', required=True, help='Path to the AndroidManifest.xml file')
@@ -95,7 +101,7 @@ if __name__ == "__main__":
     root = ET.parse(args.file).getroot()
     print(f"Working with the namespace ",end="")
     print_colored(android_namespace,CYAN)
-    print()
+    print("\n\n")
 
     if args.dump:
         get_activities(root,android_namespace)
