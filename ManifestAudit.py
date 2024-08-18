@@ -69,7 +69,13 @@ def get_intents(root: ET.Element,android_namespace):
             print_colored("\tCategory:",YELLOW)
             print(f"\t\t{category.get(f'{{{android_namespace}}}name')}")
         print("\t"+("="*40))
-
+def get_receivers(root:ET.Element,android_namespace):
+    print_colored("Receiver:",BLUE)
+    for receiver in root.findall(".//receiver"):
+        name = receiver.get(f"{{{android_namespace}}}name")
+        receiver.findall(".//intent-filter")
+        print("\t",end="")
+        print_colored(name,ENDC)
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
@@ -82,6 +88,7 @@ if __name__ == "__main__":
     parser.add_argument('--uses-permissions', action='store_true', help='provide needed permission for the application to run')
     parser.add_argument('--intents', action='store_true', help='provide intents')
     parser.add_argument('--dump', action='store_true', help='dump the whole file and extract all possible data')
+    parser.add_argument('--receivers', action='store_true', help='get only Broadcast Receivers')
     args = parser.parse_args()
     
     android_namespace = get_namespace(args.file) if not args.namespace else args.namespace
@@ -98,6 +105,8 @@ if __name__ == "__main__":
         get_uses_permissions(root)
         print()
         get_intents(root,android_namespace)
+        print()
+        get_receivers(root,android_namespace)
 
     elif args.get_namespace:
         exit()        
@@ -113,3 +122,6 @@ if __name__ == "__main__":
     
     elif args.intents:
         get_intents(root,android_namespace)
+        
+    elif args.receivers:
+        get_receivers(root,android_namespace)
