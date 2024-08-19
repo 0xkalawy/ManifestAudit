@@ -71,18 +71,29 @@ def get_intents(root: ET.Element,android_namespace):
             print_colored("\t"+i.tag+":",YELLOW)
             print(f"\t\t{i.get(f'{{{android_namespace}}}name')}")
         print("\t"+("="*40))
+        
 def get_receivers(root:ET.Element,android_namespace):
     print_colored("Receiver:",BLUE)
     print()
     for receiver in root.findall(".//receiver"):
-        name = receiver.get(f"{{{android_namespace}}}name")
         print("\t",end="")
-        print_colored(name,ENDC)
+        print_colored(receiver.get(f"{{{android_namespace}}}name"),ENDC)
         for i in receiver.findall(".//intent-filter"):
             print()
             for j in i.findall(".//*"):
                 print_colored("\t\t"+j.tag+": ",RED)
                 print(j.get(f"{{{android_namespace}}}name"))
+
+def get_providers(root:ET.Element,android_namespace):
+    print_colored("Content Providers",BLUE)
+    print()
+    for provider in root.findall(".//provider"):
+        print("\t",end="")
+        print(provider.get(f"{{{android_namespace}}}name"))
+        for i in provider.findall(".//*"):
+            print_colored("\t\t"+i.tag+": ",RED)
+            print(i.get(f"{{{android_namespace}}}name"))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
     parser.add_argument('-f', '--file', required=True, help='Path to the AndroidManifest.xml file')
@@ -95,6 +106,7 @@ if __name__ == "__main__":
     parser.add_argument('--intents', action='store_true', help='provide intents')
     parser.add_argument('--dump', action='store_true', help='dump the whole file and extract all possible data')
     parser.add_argument('--receivers', action='store_true', help='get only Broadcast Receivers')
+    parser.add_argument('--providers', action='store_true', help='provide content providers')
     args = parser.parse_args()
     
     android_namespace = get_namespace(args.file) if not args.namespace else args.namespace
@@ -113,6 +125,8 @@ if __name__ == "__main__":
         get_intents(root,android_namespace)
         print()
         get_receivers(root,android_namespace)
+        print()
+        get_providers(root,android_namespace)
 
     elif args.get_namespace:
         exit()        
@@ -131,3 +145,6 @@ if __name__ == "__main__":
         
     elif args.receivers:
         get_receivers(root,android_namespace)
+        
+    elif args.providers:
+        get_providers(root,android_namespace)
