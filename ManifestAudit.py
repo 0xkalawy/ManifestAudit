@@ -94,6 +94,7 @@ def get_providers(root:ET.Element,android_namespace):
         for i in provider.findall(".//*"):
             print_colored("\t"+i.tag+": ",RED)
             print(i.get(f"{{{android_namespace}}}name"))
+        print()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
