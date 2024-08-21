@@ -36,6 +36,7 @@ def get_activities(root:ET.Element,android_namespace:str):
         exported = activity.get(f"{{{android_namespace}}}exported")
         if exported == 'true' or activity.findall(".//intent-filter"):
             exported_activities.append(name)
+        print()
 
     print("\n")
     print_colored("\tExported Activities:",RED)
@@ -43,7 +44,7 @@ def get_activities(root:ET.Element,android_namespace:str):
     for activity in exported_activities:
         print("\t\t",end="")
         print_colored(activity,ENDC)
-    
+        print()
         
 # print custom permissions 
 def get_custom_permissions(root:ET.Element):
