@@ -92,7 +92,7 @@ def get_providers(root:ET.Element,android_namespace):
         print("\t",end="")
         print(provider.get(f"{{{android_namespace}}}name"))
         for i in provider.findall(".//*"):
-            print_colored("\t\t"+i.tag+": ",RED)
+            print_colored("\t"+i.tag+": ",RED)
             print(i.get(f"{{{android_namespace}}}name"))
 
 if __name__ == "__main__":
