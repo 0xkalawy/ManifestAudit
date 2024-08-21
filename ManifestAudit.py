@@ -82,18 +82,23 @@ def get_receivers(root:ET.Element,android_namespace):
         for i in receiver.findall(".//intent-filter"):
             print()
             for j in i.findall(".//*"):
-                print_colored("\t\t"+j.tag+": ",RED)
+                print_colored("\t\t"+j.tag+": ",YELLOW)
                 print(j.get(f"{{{android_namespace}}}name"))
 
 def get_providers(root:ET.Element,android_namespace):
     print_colored("Content Providers",BLUE)
     print()
     for provider in root.findall(".//provider"):
-        print("\t",end="")
-        print(provider.get(f"{{{android_namespace}}}name"))
+        for attrib_name, attrib_value in provider.attrib.items():
+                print_colored(f"\t{attrib_name[44:]}:\t",YELLOW)
+                print(f" {attrib_value}")
         for i in provider.findall(".//*"):
-            print_colored("\t"+i.tag+": ",RED)
-            print(i.get(f"{{{android_namespace}}}name"))
+            print_colored("\n\n\tInner Tags\n",RED)
+            print_colored("\t\t" + i.tag + ":\n", CYAN)
+            for attrib_name, attrib_value in i.attrib.items():
+                print_colored(f"\t\t\t{attrib_name[44:]}:\t",YELLOW)
+                print(f" {attrib_value}")
+
         print("\t"+"="*40)
 
 if __name__ == "__main__":
