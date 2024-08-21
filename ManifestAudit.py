@@ -99,7 +99,7 @@ def get_providers(root:ET.Element,android_namespace):
                 print_colored(f"\t\t\t{attrib_name[44:]}:\t",YELLOW)
                 print(f" {attrib_value}")
 
-        print("\t"+"="*40)
+        print("\t"+"="*40+"\n\n")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AndroidManifest.xml file analyzing and cutting down")
