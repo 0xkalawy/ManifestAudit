@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import xml.etree.ElementTree as ET
 from re import findall
@@ -50,10 +50,10 @@ def get_activities(root:ET.Element,android_namespace:str):
 def get_custom_permissions(root:ET.Element):
     print_colored("Custom Permissions:",BLUE)
     print()
-    for permission in root.findall(".//permission"):
-        name = permission.get(f"{{{android_namespace}}}name")
+    for permission in root.findall(".//permission"):    
         print("\t",end="")
-        print_colored(name,ENDC)
+        print_colored(permission.get(f"{{{android_namespace}}}name"),ENDC)
+        print_colored(permission.get(f"{{{android_namespace}}}protectionLevel"),ENDC)
        
 # print uses permission
 def get_uses_permissions(root:ET.Element):
