@@ -18,12 +18,8 @@
    ```bash
    git clone https://github.com/MohamedWagdy7/ManifestAudit.git
    cd ManifestAudit
-   ```
-
-   **For linux**
-
-   ```bash
    sudo mv ManifestAudit /usr/bin
+   cd .. && rm ManifestAudit -r -f
    ```
 
 ## Usage
